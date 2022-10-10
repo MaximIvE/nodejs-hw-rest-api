@@ -11,19 +11,19 @@ router.get('/', async (req, res, next) => {
 })
 
 router.get('/:Id', async (req, res, next) => {
-  res.json({ message: 'template message123' })
+  res.json({ message: 'template message' })
 })
 
 router.post('/', async (req, res, next) => {
-  res.json({ message: 'template message***' })
+  res.json({ message: 'template message' })
 })
 
 router.delete('/:Id', async (req, res, next) => {
-  res.json({ message: 'template message+++' })
+  res.json({ message: 'template message' })
 })
 
 router.put('/:Id', async (req, res, next) => {
-  res.json({ message: 'template message---' })
+  res.json({ message: 'template message' })
 })
 
 module.exports = router
