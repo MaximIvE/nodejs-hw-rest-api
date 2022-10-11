@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const { listContacts, getContactById } = require('../../models/contacts');
-
+const { listContacts, getContactById, removeContact, addContact } = require('../../models/contacts');
+const {requestError} = require('../../helpers');
 
 
 router.get('/', async (req, res, next) => {
@@ -9,34 +9,41 @@ router.get('/', async (req, res, next) => {
     const data = await listContacts();
     res.json(data)
   } catch (error) {
-    res.status(500).json({
-      message: "Server error"
-    })
+    next(error);
   }
 })
 
 router.get('/:Id', async (req, res, next) => {
   try {
     const data = await getContactById(req.params.Id)
-    if(!data){
-      return res.status(404).json({
-        message: "Not found"
-      })
-    }
+    if(!data) throw requestError(404, "Not found");
     res.json(data);
   } catch (error) {
-    res.status(500).json({
-      message: "Server error"
-    })
+    next(error);
   }
 })
 
 router.post('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
+  try {
+    const {name, email, phone} = req.body;
+    if(!name || !email || !phone) throw requestError(400,"missing required name field")
+    const data = await addContact(req.body)
+    if(!data)throw requestError(500,"Server error")
+    res.status(201).json(data)
+  } catch (error) {
+    next(error)
+  }
+
 })
 
 router.delete('/:Id', async (req, res, next) => {
-  res.json({ message: 'template message' })
+  try {
+    const data = await removeContact(req.params.Id)
+    if(!data) throw requestError(404, "Not found")
+    res.json({message: "contact delited"})
+  } catch (error) {
+    next(error);
+  }
 })
 
 router.put('/:Id', async (req, res, next) => {
@@ -44,5 +51,3 @@ router.put('/:Id', async (req, res, next) => {
 })
 
 module.exports = router
-
-

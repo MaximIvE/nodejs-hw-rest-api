@@ -1,6 +1,7 @@
 const fs = require('fs/promises')
 const path = require("path");
 const contactsPath = path.join(__dirname, "contacts.json");
+const {generatorId} = require('../helpers')
 
 const listContacts = async () => {
     const data = await fs.readFile(contactsPath, "utf-8");
@@ -9,29 +10,23 @@ const listContacts = async () => {
 
 const getContactById = async (id) => {
   const result = await listContacts();
-    if(!result) return null;
     const contact = result.find(item => item.id === id);
     return contact || null;
 }
 
-const removeContact = async (contactId) => {
+const removeContact = async (id) => {
   const contacts = await listContacts();
-  const removedContact = await getContactById(contactId);
-  
-  if (!contacts || !removedContact) return null;
-  const id = contactId.toString();
-
+  const removedContact = await getContactById(id);
   const newContacts = contacts.filter(item => item.id !== id);
   const newContactsStr = JSON.stringify(newContacts, null, 2);
-
   fs.writeFile(contactsPath, newContactsStr );
   return removedContact;
 }
 
 const addContact = async (body) => {
   const result = await listContacts();
-    if(!result) console.warn("\x1b[33m%s\x1b[0m Failed to read previous contacts. Contacts will be overwritten.");
-    const id = (Number(result[result.length - 1].id) + 1).toString() || 1;
+  
+    const id = generatorId(result);
     const data = {id, ...body};
     const newContacts = result ? [...result, data] : [data];
     const newContactsStr = JSON.stringify(newContacts, null, 2);
