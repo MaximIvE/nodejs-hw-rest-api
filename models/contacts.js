@@ -3,21 +3,14 @@ const path = require("path");
 const contactsPath = path.join(__dirname, "contacts.json");
 
 const listContacts = async () => {
-  try{
     const data = await fs.readFile(contactsPath, "utf-8");
     return JSON.parse(data);
-  }catch(error){
-    console.log('\x1b[33m%s\x1b[0m', error.message);
-    return null;
-  }
 }
 
-// ! corrected == on ===
 const getContactById = async (id) => {
   const result = await listContacts();
     if(!result) return null;
     const contact = result.find(item => item.id === id);
-    if(!contact) console.warn("\x1B[31m Contact not found");
     return contact || null;
 }
 
