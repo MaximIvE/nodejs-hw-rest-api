@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { listContacts, getContactById, removeContact, addContact } = require('../../models/contacts');
+const { listContacts, getContactById, removeContact, addContact, updateContact } = require('../../models/contacts');
 const {requestError} = require('../../helpers');
 
 
@@ -47,7 +47,17 @@ router.delete('/:Id', async (req, res, next) => {
 })
 
 router.put('/:Id', async (req, res, next) => {
-  res.json({ message: 'template message' })
+  try {
+    const {body} = req;
+    const {name, email, phone} = body;
+    if(!name && !email && !phone) throw requestError(400,"missing fields")
+    if(!body) throw requestError(400, "missing fields")
+    const data = await updateContact(req.params.Id, body)
+    if(!data) throw requestError(404, "Not found")
+    res.json(data)
+  } catch (error) {
+    next(error)
+  }
 })
 
 module.exports = router
