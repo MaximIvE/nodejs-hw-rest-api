@@ -1,4 +1,3 @@
-const e = require('express');
 const fs = require('fs/promises')
 const path = require("path");
 const contactsPath = path.join(__dirname, "contacts.json");
@@ -11,12 +10,13 @@ const listContacts = async () => {
 
 const getContactById = async (id) => {
   const result = await listContacts();
-    const contact = result.find(item => item.id === id);
-    return contact || null;
+  const contact = result.find(item => item.id === id);
+  return contact || null;
 }
 
 const removeContact = async (id) => {
   const contacts = await listContacts();
+  if (!contacts) return null;
   const removedContact = await getContactById(id);
   const newContacts = contacts.filter(item => item.id !== id);
   const newContactsStr = JSON.stringify(newContacts, null, 2);
@@ -26,13 +26,13 @@ const removeContact = async (id) => {
 
 const addContact = async (body) => {
   const result = await listContacts();
-  
-    const id = generatorId(result);
-    const data = {id, ...body};
-    const newContacts = result ? [...result, data] : [data];
-    const newContactsStr = JSON.stringify(newContacts, null, 2);
-    fs.writeFile(contactsPath, newContactsStr );
-    return data;
+  if (!result) return null;
+  const id = generatorId(result);
+  const data = {id, ...body};
+  const newContacts = result ? [...result, data] : [data];
+  const newContactsStr = JSON.stringify(newContacts, null, 2);
+  fs.writeFile(contactsPath, newContactsStr );
+  return data;
 }
 
 const updateContact = async (id, body) => {

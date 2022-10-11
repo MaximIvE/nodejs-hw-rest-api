@@ -1,8 +1,21 @@
 const express = require('express')
 const router = express.Router()
+const Joi = require('joi')
 const { listContacts, getContactById, removeContact, addContact, updateContact } = require('../../models/contacts');
 const {requestError} = require('../../helpers');
 
+
+const addSchema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().required(),
+  phone: Joi.string().required(),
+})
+
+const fixedShema = Joi.object({
+  name: Joi.string(),
+  email:Joi.string(),
+  phone: Joi.string(),
+})
 
 router.get('/', async (req, res, next) => {
   try {
@@ -25,8 +38,9 @@ router.get('/:Id', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const {name, email, phone} = req.body;
-    if(!name || !email || !phone) throw requestError(400,"missing required name field")
+    const {error} = addSchema.validate(req.body);
+    console.log(error)
+    if(error) throw requestError(400, error.message.replaceAll( '"', "'"))
     const data = await addContact(req.body)
     if(!data)throw requestError(500,"Server error")
     res.status(201).json(data)
@@ -49,9 +63,11 @@ router.delete('/:Id', async (req, res, next) => {
 router.put('/:Id', async (req, res, next) => {
   try {
     const {body} = req;
+    const {error} = fixedShema.validate(body);
+    
     const {name, email, phone} = body;
-    if(!name && !email && !phone) throw requestError(400,"missing fields")
-    if(!body) throw requestError(400, "missing fields")
+    if(error) throw requestError(400, error.message.replaceAll( '"', "'"))
+    if(!name && !email && !phone) throw requestError(400, "missing fields")
     const data = await updateContact(req.params.Id, body)
     if(!data) throw requestError(404, "Not found")
     res.json(data)
