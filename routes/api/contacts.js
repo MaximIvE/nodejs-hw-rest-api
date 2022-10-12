@@ -5,17 +5,17 @@ const { listContacts, getContactById, removeContact, addContact, updateContact }
 const {requestError} = require('../../helpers');
 
 
-const addSchema = Joi.object({
+const schemaAdd = Joi.object({
   name: Joi.string().required(),
   email: Joi.string().required(),
   phone: Joi.string().required(),
 })
 
-const fixedShema = Joi.object({
+const schemaUpdate = Joi.object({
   name: Joi.string(),
   email:Joi.string(),
   phone: Joi.string(),
-})
+}).min(1)
 
 router.get('/', async (req, res, next) => {
   try {
@@ -38,8 +38,7 @@ router.get('/:Id', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const {error} = addSchema.validate(req.body);
-    console.log(error)
+    const {error} = schemaAdd.validate(req.body);
     if(error) throw requestError(400, error.message.replaceAll( '"', "'"))
     const data = await addContact(req.body)
     if(!data)throw requestError(500,"Server error")
@@ -63,11 +62,9 @@ router.delete('/:Id', async (req, res, next) => {
 router.put('/:Id', async (req, res, next) => {
   try {
     const {body} = req;
-    const {error} = fixedShema.validate(body);
+    const {error} = schemaUpdate.validate(body);
     
-    const {name, email, phone} = body;
     if(error) throw requestError(400, error.message.replaceAll( '"', "'"))
-    if(!name && !email && !phone) throw requestError(400, "missing fields")
     const data = await updateContact(req.params.Id, body)
     if(!data) throw requestError(404, "Not found")
     res.json(data)

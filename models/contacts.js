@@ -4,8 +4,8 @@ const contactsPath = path.join(__dirname, "contacts.json");
 const {generatorId} = require('../helpers')
 
 const listContacts = async () => {
-    const data = await fs.readFile(contactsPath, "utf-8");
-    return JSON.parse(data);
+  const data = await fs.readFile(contactsPath, "utf-8");
+  return JSON.parse(data);
 }
 
 const getContactById = async (id) => {
