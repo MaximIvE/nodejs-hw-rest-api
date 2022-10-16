@@ -6,15 +6,16 @@ const { validateBody } = require('../../middlewares')
 const schemas = require('../../schemas/contacts')
 
 
-router.get('/', ctrlWrapper(ctrl.getAll))
+// router.get('/', ctrlWrapper(ctrl.getAll))
 
-router.get('/:Id', ctrlWrapper(ctrl.getById))
+// router.get('/:Id', ctrlWrapper(ctrl.getById))
 
-router.post('/', validateBody(schemas.schemaAdd), ctrlWrapper(ctrl.add))
+// router.post('/', validateBody(schemas.schemaAdd), ctrlWrapper(ctrl.add))
+router.post('/', ctrlWrapper(ctrl.add))
 
-router.delete('/:Id', ctrlWrapper(ctrl.removeById))
+// router.delete('/:Id', ctrlWrapper(ctrl.removeById))
 
-router.put('/:Id', validateBody(schemas.schemaUpdate), ctrlWrapper(ctrl.updateById))
+// router.put('/:Id', validateBody(schemas.schemaUpdate), ctrlWrapper(ctrl.updateById))
 
 
-module.exports = router
+module.exports = router;

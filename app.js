@@ -8,7 +8,6 @@ const dotenv = require("dotenv")
 dotenv.config()
 
 const app = express()
-
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
 
 
@@ -29,4 +28,3 @@ app.use((err, req, res, next) => {
 })
 
 module.exports = app
-// aHJ1OCjoH5tbbe6A
