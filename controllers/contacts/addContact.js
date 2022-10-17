@@ -1,4 +1,3 @@
-const {addContact} = require('../../models/contacts');
 const { requestError } = require('../../helpers');
 const Book = require('../../models/contact')
 
