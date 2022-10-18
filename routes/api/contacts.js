@@ -12,10 +12,10 @@ router.get('/:Id', isValidId, ctrlWrapper(ctrl.getById))
 
 router.post('/', validateBody(schemas.schemaAdd), ctrlWrapper(ctrl.add))
 
-// router.delete('/:Id', isValidId,  ctrlWrapper(ctrl.removeById))
+router.delete('/:Id', isValidId,  ctrlWrapper(ctrl.removeById))
 
 router.put('/:Id', isValidId, validateBody(schemas.schemaUpdate), ctrlWrapper(ctrl.updateById))
 
-router.patch('/:Id/favorite', isValidId, validateBody(schemas.schemaUpdateFavorite), ctrlWrapper(ctrl.updateFavorite))
+router.patch('/:Id/favorite', isValidId, validateBody(schemas.schemaUpdateFavorite), ctrlWrapper(ctrl.updateStatusContact))
 
 module.exports = router;

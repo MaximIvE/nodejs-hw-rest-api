@@ -41,7 +41,9 @@ const schemaUpdate = Joi.object({
 }).min(1)
 
 const schemaUpdateFavorite = Joi.object({
-    favorite: Joi.boolean().required()
+    favorite: Joi.boolean().required().messages({
+        'any.required': 'missing field favorite'
+    })
 })
 
 const schemas = {
