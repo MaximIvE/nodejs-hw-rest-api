@@ -6,9 +6,9 @@ const { validateBody, isValidId, authenticate } = require('../../middlewares')
 const {schemas} = require('../../models/contact')
 
 
-router.get('/', ctrlWrapper(ctrl.getAll))
+router.get('/', authenticate, ctrlWrapper(ctrl.getAll))
 
-router.get('/:Id', isValidId, ctrlWrapper(ctrl.getById))
+router.get('/:Id', authenticate, isValidId, ctrlWrapper(ctrl.getById))
 
 router.post('/', authenticate, validateBody(schemas.schemaAdd), ctrlWrapper(ctrl.add))
 
