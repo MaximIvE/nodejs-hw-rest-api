@@ -42,9 +42,14 @@ const loginSchema = Joi.object({
     email: Joi.string().pattern(emailRegexp).required(),
 });
 
+const updateSubscriptionSchema = Joi.object({
+    subscription: Joi.string().valid ( "starter", "pro", "business" ).required(),
+})
+
 const schemas = {
     registerSchema,
     loginSchema,
+    updateSubscriptionSchema
 }
 
 module.exports = {
