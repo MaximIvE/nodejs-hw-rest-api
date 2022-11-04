@@ -1,6 +1,7 @@
 const express = require('express')
 const logger = require('morgan')
 const cors = require('cors')
+const path = require('path')
 
 const authRouter = require('./routes/api/auth')
 const contactsRouter = require('./routes/api/contacts')
@@ -17,6 +18,9 @@ app.use(express.json())
 
 app.use('/api/users', authRouter)
 app.use('/api/contacts', contactsRouter)
+app.get('/avatars/:cover', (req, res) => {
+  res.sendFile(path.join(__dirname, `public/avatars/${req.params.cover}`))
+})
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' })
