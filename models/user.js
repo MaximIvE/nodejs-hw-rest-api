@@ -50,15 +50,10 @@ const updateSubscriptionSchema = Joi.object({
     subscription: Joi.string().valid ( "starter", "pro", "business" ).required(),
 })
 
-const updateAvatarSchema = Joi.object({
-    avatarURL: Joi.string().required()
-})
-
 const schemas = {
     registerSchema,
     loginSchema,
-    updateSubscriptionSchema,
-    updateAvatarSchema
+    updateSubscriptionSchema
 }
 
 module.exports = {

@@ -1,9 +1,9 @@
 const express = require('express')
 const logger = require('morgan')
 const cors = require('cors')
-const path = require('path')
-const multer = require('multer')
-const fs = require('fs/promises')
+// const path = require('path')
+
+// const fs = require('fs/promises')
 
 const authRouter = require('./routes/api/auth')
 const contactsRouter = require('./routes/api/contacts')
@@ -14,34 +14,29 @@ dotenv.config()
 const app = express()
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
 
-const tempDir = path.join(__dirname, 'tmp/');
-const newTempDir = path.join(__dirname, "public", "avatars")
-const multerConfig = multer.diskStorage({
-  destination: tempDir,
-  filename: (req, file, cb) => {
-    cb(null, file.originalname)
-  }
-});
-
-const upload = multer({
-  storage: multerConfig, 
-})
-
 app.use(logger(formatsLogger))
 app.use(cors())
 app.use(express.json())
+app.use(express.static("public"))
 
 app.use('/api/users', authRouter)
 app.use('/api/contacts', contactsRouter)
-app.get('/avatars/:cover', (req, res) => {
-  res.sendFile(newTempDir + req.params.cover)
-});
-app.post("/api/files", upload.single("cover"), async (req, res) => {
-  // console.log(req.body);
-  console.log(req.file);
-  const { path: tempDir, originalname } = req.file;
-  await fs.rename(tempDir, newTempDir + originalname)
-})
+
+
+// app.post("/api/files", upload.single("cover"), async (req, res) => {
+//   // console.log("req.body", req.body);
+//   // console.log ("req,file", req.file);
+//   const { path: tmpDir, originalname } = req.file;
+//   const tmpDirUpdate = path.join(__dirname, "public", "avatars", originalname) 
+//   await fs.rename(tmpDir, tmpDirUpdate);
+//   const avatarURL = path.join("avatars", originalname);
+//   // const baseUrl = "http://localhost:3000/"
+//   const newUser = {
+//     ...req.body,
+//     avatarURL: avatarURL,
+//   };
+//   res.status(201).json(newUser);
+// })
 
 
 app.use((req, res) => {
