@@ -24,6 +24,7 @@ const contactSchema = new Schema({
         type: Boolean,
         default: false,
     },
+
     owner: {
         type: Schema.Types.ObjectId,    // спеціальний тип днаних для id в цій БД
         ref: 'user',                    // з якої колекції береться id
