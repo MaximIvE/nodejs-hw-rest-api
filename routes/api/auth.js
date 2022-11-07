@@ -5,7 +5,7 @@ const { ctrlWrapper } = require('../../helpers');
 const { validateBody, authenticate, upload } = require('../../middlewares');
 const { schemas } = require('../../models/user');
 
-const { register, login, getCurrent, logout, subscription, updateAvatar } = require('../../controllers/auth');
+const { register, login, getCurrent, logout, subscription, updateAvatar, verificationRequest } = require('../../controllers/auth');
 
 router.post("/register", validateBody(schemas.registerSchema), ctrlWrapper(register))
 
@@ -18,5 +18,7 @@ router.get("/logout", authenticate, ctrlWrapper(logout))
 router.patch("/users", authenticate, validateBody(schemas.updateSubscriptionSchema), ctrlWrapper(subscription))
 
 router.patch("/avatars", authenticate, upload.single("avatar"), ctrlWrapper(updateAvatar))
+
+router.get("/verify/:verificationToken", ctrlWrapper(verificationRequest));
 
 module.exports = router;
