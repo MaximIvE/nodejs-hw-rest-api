@@ -4,6 +4,8 @@ const uniqid = require("uniqid");
 const { User } = require('../../models/user');
 const { requestError, sendEmail } = require('../../helpers');
 
+const {BASE_URL} = process.env
+
 
 const register = async (req, res) => {
     const { email, password } = req.body;
@@ -17,27 +19,25 @@ const register = async (req, res) => {
     
     // const avatarURL = gravatar.url(email, {s:'250', r:'x', d:'retro'}); 
     const result = await User.create({ email, password: hashPassword, avatarURL, verificationToken});
+    
+
+// --- checking email ---
+    const data = {
+        to: email,
+        subject: "Служба реєстрації пошти Contact book",
+        html:   `<h2>Дякуємо, що скористались нашим сервісом!</h2>
+                <p>Для того, щоб підтвердити вашу електронну адресу, перейдіть </p>
+                <a target="_blank" href="${BASE_URL}/api/users/verify/${verificationToken}">за цим посиланням.</a>`
+    };
+
+    await sendEmail(data);
+    
     res.status(201).json({
         user: {
             email: result.email,
             subscription: result.subscription
         }
     })
-
-// --- checking email ---
-    const data = {
-        // to: "ivanukmaxim@gmail.com",
-        // to: "teachermaksym@gmail.com",
-        to: email,
-        // from: "maksymivaniuk@meta.ua",
-        subject: "Служба реєстрації пошти Contact book",
-        html:   `<h2>Дякуємо, що скористались нашим сервісом!</h2>
-                <p>Для того, щоб підтвердити вашу електронну адресу, перейдіть </p>
-                <a href="http://localhost:3000/api/users/verify/${verificationToken}">за цим посиланням.</a>`
-    };
-
-    const emailSuccess = await sendEmail(data);
-    console.log(emailSuccess);
 
 };
 
