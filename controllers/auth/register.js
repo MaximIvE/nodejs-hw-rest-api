@@ -24,13 +24,18 @@ const register = async (req, res) => {
 // --- checking email ---
     const data = {
         to: email,
-        subject: "Служба реєстрації пошти Contact book",
+        subject: "Contact book",
         html:   `<h2>Дякуємо, що скористались нашим сервісом!</h2>
                 <p>Для того, щоб підтвердити вашу електронну адресу, перейдіть </p>
                 <a target="_blank" href="${BASE_URL}/api/users/verify/${verificationToken}">за цим посиланням.</a>`
     };
 
-    await sendEmail(data);
+    try {
+        await sendEmail(data);
+    } catch (error) {
+        console.error(error.message);
+    }
+
     
     res.status(201).json({
         user: {
